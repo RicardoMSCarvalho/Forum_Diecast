@@ -81,15 +81,11 @@ export default function Register() {
                 <div className="text-center">
                   <div className="d-flex justify-content-center ">
                     <img
-                      src={
-                        value.image
-                          ? URL.createObjectURL(value.image)
-                          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuUfHOObCMLKoXllPHh-neVeHGtYnkkiZWfg&s"
-                      }
-                      alt="avatar"
+                      src={value.image ? URL.createObjectURL(value.image) : ""}
+                      alt="Click to add image"
                       width="100"
                       height="100"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", backgroundColor: "white" }}
                       onClick={handleImageClick}
                     />
                   </div>
