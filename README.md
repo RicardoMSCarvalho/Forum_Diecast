@@ -13,3 +13,8 @@
 - Users with User credentials can only comment on posts.
   
 - Both of this users can also change their profile data
+
+
+
+https://github.com/user-attachments/assets/93773151-f161-4fd5-a5d2-cad4a5a8a4ba
+
