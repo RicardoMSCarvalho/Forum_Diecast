@@ -5,7 +5,9 @@
 
 - Users with Admin credentials can
   >Add and delete posts
+
   >Delete users (except other Admin)
+
   >Comment on posts
 
 - Users with User credentials can only comment on posts.
