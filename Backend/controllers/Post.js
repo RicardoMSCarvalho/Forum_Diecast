@@ -1,20 +1,16 @@
 import Postmodel from "../models/Post.js";
-import fs from "fs";
-import path from "path";
+import CommentModel from "../models/Commments.js";
+import { deleteImage } from "../middleware/DeleteImage.js";
 
 const create = async (req, resp) => {
   try {
-    const { title, description, image } = req.body;
-    if (!title || !description || image)
-      return resp
-        .status(400)
-        .json({ success: false, message: "All the fields are required" });
+    const { title, description } = req.body;
+    if (!title || !description || !req.file)
+      return resp.status(400).json({
+        success: false,
+        message: "You can leave empty fields",
+      });
 
-    if (!req.file) {
-      return resp
-        .status(400)
-        .json({ success: false, message: "Image file is required" });
-    }
     const imagePath = req.file.filename;
 
     const createPost = new Postmodel({
@@ -44,7 +40,7 @@ const update = async (req, resp) => {
     if (!postToUpdate) {
       return resp
         .status(404)
-        .json({ success: false, message: "Post couldnt be found" });
+        .json({ success: false, message: "Post could not be found" });
     }
 
     if (title) postToUpdate.title = title;
@@ -69,7 +65,7 @@ const getPosts = async (req, resp) => {
     if (!posts) {
       return resp
         .status(404)
-        .json({ success: false, message: "Post not found" });
+        .json({ success: false, message: "Posts not found" });
     }
     resp.status(200).json({ success: true, posts });
   } catch (error) {
@@ -80,40 +76,52 @@ const getPosts = async (req, resp) => {
 const deletePost = async (req, resp) => {
   try {
     const postID = req.params.id;
-    const posts = await Postmodel.findById(postID);
+    const postToDelete = await Postmodel.findById(postID).populate("comments");
 
-    if (!posts) {
+    if (!postToDelete) {
       return resp
         .status(404)
         .json({ success: false, message: "Post not found" });
     }
-    if (posts.image) {
-      const profilePath = path.join("public/images", posts.image);
-      fs.promises
-        .unlink(profilePath)
-        .then(() => console.log("Profile image deleted"))
-        .catch((error) =>
-          console.error("Error deleting profile image:", error.message)
-        );
+    if (postToDelete.comments.length > 0) {
+      await CommentModel.deleteMany({
+        _id: { $in: postToDelete.comments.map((comment) => comment._id) },
+      });
     }
-    const deletepost = await Postmodel.findByIdAndDelete(postID);
+
+    if (postToDelete.image) {
+      await deleteImage(postToDelete.image);
+    }
+
+    const deletedPost = await Postmodel.findByIdAndDelete(postID);
+
     resp.status(200).json({
       success: true,
-      message: "Post Delete Successfully",
-      post: deletepost,
+      message: "Post deleted successfully",
+      post: deletedPost,
     });
   } catch (error) {
     resp.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-const LimitText = (text, wordLimit) => {
+const limitText = (text, charLimit, paragraphLimit) => {
   if (!text) return "";
-  const words = text.split(" ");
-  if (words.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "...";
+  const paragraphs = text.split(/\n\n/);
+
+  if (paragraphs.length > paragraphLimit) {
+    text = paragraphs.slice(0, paragraphLimit).join("\n\n");
   }
+
+  if (text.length > charLimit) {
+    return text.substring(0, charLimit) + "...";
+  }
+
   return text;
 };
 
-export { create, update, getPosts, deletePost, LimitText };
+const renderText = (description) => {
+  return description.split("\n");
+};
+
+export { create, update, getPosts, deletePost, limitText, renderText };

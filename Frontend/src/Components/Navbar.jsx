@@ -35,16 +35,15 @@ export default function Navbar() {
         ) : (
           <div className="dropdown">
             <div
-              className="avatar-container pointer overflow-hidden bg-info"
+              className="avatar-container"
               data-bs-toggle="dropdown"
               aria-expanded="false"
-              style={{ width: "40px", height: "40px", cursor: "pointer" }}
             >
               <img
-                className="img-fluid h-100 w-100"
                 src={`${BaseUrl}/images/${user.profile}`}
-                alt="Profile"
+                alt="Avatar"
                 style={{ objectFit: "cover" }}
+                className="img-fluid h-100 w-100"
               />
             </div>
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-dark">

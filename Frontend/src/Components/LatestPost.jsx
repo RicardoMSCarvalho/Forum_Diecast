@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BaseUrl, get } from "../services/Endpoint";
-import { LimitText } from "../../../Backend/controllers/Post";
+import { limitText } from "../../../Backend/controllers/Post";
 export default function LatestPost() {
   const navigation = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -26,33 +26,24 @@ export default function LatestPost() {
   return (
     <>
       <div className="container">
-        <div className="mb-5 ">
+        <div className="mb-5">
           <h2 className="fw-bold fs-1 text-white">Latest Posts</h2>
         </div>
         <div className="row">
-          {posts &&
+          {posts.length > 0 ? (
             posts.map((elem) => {
               return (
                 <div className="col-md-4 mb-4" key={elem._id}>
-                  <div
-                    className="card"
-                    style={{
-                      borderWidth: "2px",
-                      backgroundColor: "#2b2b2b",
-                      borderRadius: "10px",
-                      overflow: "hidden",
-                    }}
-                  >
+                  <div className="card1">
                     <img
                       src={`${BaseUrl}/images/${elem.image}`}
                       className="card-img-top img-fluid"
                       alt={elem.title}
-                      style={{ height: "200px", objectFit: "cover" }}
                     />
                     <div className="card-body bg-dark text-white">
                       <h5 className="card-title">{elem.title}</h5>
                       <p className="card-text">
-                        {LimitText(elem.description, 20)}
+                        {limitText(elem.description, 20)}
                       </p>
                       <button
                         className="btn btn-primary w-100 mt-3"
@@ -64,7 +55,15 @@ export default function LatestPost() {
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="text-white text-center w-100">
+              <p style={{ fontWeight: "700" }}>Nothing found 😥</p>
+              <p style={{ fontWeight: "500" }}>
+                Seems like we dont have any post to show you
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

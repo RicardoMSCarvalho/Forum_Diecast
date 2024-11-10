@@ -17,11 +17,13 @@ export default function Adminlayout() {
   }, [user, navigate]);
   return (
     <>
-      <Navbar />
-      <div className="d-flex">
-        <Sidebar />
-        <div className="content flex-grow-1 p-4 bg-white">
-          <Outlet />
+      <div className="total">
+        <Navbar />
+        <div className="d-flex" style={{ minHeight: "800px" }}>
+          <Sidebar />
+          <div className="content flex-grow-1 p-4 bg-white">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>

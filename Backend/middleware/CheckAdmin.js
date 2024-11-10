@@ -28,25 +28,28 @@ const isAdmin = async (req, resp, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return resp.status(401).json({ message: "Unauthorized: Invalid token" });
+    // return resp.status(401).json({ message: "Unauthorized: Invalid token" });
+    redirect("/");
   }
 };
+
 const isLogin = async (req, resp, next) => {
   try {
     const token = req.cookies.token;
-
     if (!token) {
-      return resp.status(401).json({ message: "Unauthorized: Please Login " });
+      return resp.redirect("/");
     }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await UserModal.findById(decoded.userID);
     if (!user) {
-      return resp.status(403).json({ message: "Unauthorized: User not found" });
+      return resp.redirect("/");
     }
+
     req.user = user;
     next();
   } catch (error) {
-    return resp.status(401).json({ message: "Unauthorized: Invalid token" });
+    return resp.redirect("/");
   }
 };
 

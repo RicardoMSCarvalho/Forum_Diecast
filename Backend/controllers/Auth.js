@@ -1,20 +1,28 @@
 import jwt from "jsonwebtoken";
 import UserModal from "../models/User.js";
 import bcrypt from "bcryptjs";
-import fs from "fs";
-import path from "path";
+
+import { deleteImage } from "../middleware/DeleteImage.js";
 
 const Register = async (req, resp) => {
   try {
     const { fullname, email, password } = req.body;
+    if (!fullname || !email || !password || !req.file) {
+      return resp.status(400).json({
+        success: false,
+        message: "Please provided all the necessary details",
+      });
+    }
+
     const imagePath = req.file.filename;
+
     const existUser = await UserModal.findOne({ email });
     if (existUser) {
       return resp
         .status(301)
         .json({ success: false, message: "User Already Exist Please Login" });
     }
-    const hashPassword = bcrypt.hashSync(password, 10);
+    const hashPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModal({
       fullname: fullname,
       email,
@@ -22,7 +30,6 @@ const Register = async (req, resp) => {
       profile: imagePath,
     });
     await newUser.save();
-
     resp.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -41,6 +48,7 @@ const Login = async (req, resp) => {
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
+
     const FindUser = await UserModal.findOne({ email });
     if (!FindUser) {
       return resp.status(404).json({
@@ -48,7 +56,7 @@ const Login = async (req, resp) => {
         message: "Account not found. Please register.",
       });
     }
-    const comparePassword = bcrypt.compare(password, FindUser.password);
+    const comparePassword = await bcrypt.compare(password, FindUser.password);
     if (!comparePassword) {
       return resp
         .status(401)
@@ -82,15 +90,16 @@ const Logout = async (req, resp) => {
   }
 };
 
-const updateProfile = async (req, resp) => {
+const Update = async (req, resp) => {
   try {
     const userID = req.params.id;
-    const { fullname, oldpassword, newpassword, profile } = req.body;
-    if (!fullname || !oldpassword || !newpassword)
+    const { fullname, oldpassword, newpassword } = req.body;
+
+    if ((!oldpassword && newpassword) || (oldpassword && !newpassword))
       return resp.status(400).json({
-        message: "You cant leave empty fields",
+        message: "You need to fill both password fields",
       });
-    const imagePath = req.file.filename;
+
     const ExistUser = await UserModal.findById(userID);
     if (!ExistUser) {
       return resp
@@ -98,31 +107,19 @@ const updateProfile = async (req, resp) => {
         .json({ success: false, message: "Account not found." });
     }
 
-    if (ExistUser.profile) {
-      const profilePath = path.join("public/images", ExistUser.profile);
-      fs.promises
-        .unlink(profilePath)
-        .then(() => console.log("Profile image deleted"))
-        .catch((error) =>
-          console.error("Error deleting profile image:", error)
-        );
+    if (fullname) {
+      ExistUser.fullname = fullname;
     }
-
-    if (imagePath) {
-      ExistUser.profile = imagePath;
-    }
-
     if (oldpassword) {
-      const comparePassword = bcrypt.compare(oldpassword, ExistUser.password);
+      const comparePassword = await bcrypt.compare(
+        oldpassword,
+        ExistUser.password
+      );
       if (!comparePassword) {
         return resp
           .status(401)
           .json({ success: false, message: "Old password is incorrect." });
       }
-    }
-
-    if (fullname) {
-      ExistUser.fullname = fullname;
     }
 
     if (oldpassword && newpassword) {
@@ -134,17 +131,28 @@ const updateProfile = async (req, resp) => {
         message: "New password is required when old password is provided.",
       });
     }
+    if (req.file) {
+      const deleted = await deleteImage(ExistUser.profile);
+      if (!deleted) {
+        return resp.status(500).json({
+          success: false,
+          message: "Failed to delete old profile image.",
+        });
+      }
+      const imagePath = req.file.filename;
+      ExistUser.profile = imagePath;
+    }
 
     await ExistUser.save();
-    console.log("passou");
+
     resp.status(200).json({
       success: true,
       message: "Profile updated successfully.",
       user: ExistUser,
     });
   } catch (error) {
-    resp.status(500).json({ success: false, message: "Internal Server Error" });
+    resp.status(500).json(error.message);
   }
 };
 
-export { Register, Login, Logout, updateProfile };
+export { Register, Login, Logout, Update };

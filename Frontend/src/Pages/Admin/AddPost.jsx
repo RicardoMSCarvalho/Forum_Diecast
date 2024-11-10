@@ -32,11 +32,11 @@ export default function AddPost() {
 
   return (
     <div className="container">
-      <div className="row justify-content-center">
+      <div className="row form-add-post">
         <div className="col-md-8">
           <div className="card shadow-lg">
-            <div className="card-header bg-primary text-white">
-              <h2 className="text-center mb-0">Add New Post</h2>
+            <div className="card-header text-white">
+              <h2 className="title-add-post">Add New Post</h2>
             </div>
             <div className="card-body p-4">
               <div method="post" encType="multipart/form-data">
@@ -75,7 +75,7 @@ export default function AddPost() {
                     placeholder="Write your post description here"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                  ></textarea>
+                  />
                 </div>
                 <div className="d-grid">
                   <button

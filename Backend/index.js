@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import AuthRoutes from "./routes/Auth.js";
-import DBCon from "./libs/db.js";
+import DBCon from "./db/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import PostRoutes from "./routes/Posts.js";
@@ -18,16 +18,19 @@ DBCon();
 app.use(express.json());
 app.use(express.static("public"));
 app.use(cookieParser());
+
 const corsOptoins = {
   origin: true,
   credentials: true,
 };
 
 app.get("/", (req, resp) => {
-  respsend("hello from server");
+  resp.send("hello from server");
 });
 
+// Enable CORS
 app.use(cors(corsOptoins));
+
 app.use("/auth", AuthRoutes);
 app.use("/post", PostRoutes);
 app.use("/dashboard", DashboardRoutes);

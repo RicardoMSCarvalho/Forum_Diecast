@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
-import { delet, get } from "../../services/Endpoint";
+import { remove, get } from "../../services/Endpoint";
 import toast from "react-hot-toast";
 
 export default function User() {
@@ -14,7 +14,7 @@ export default function User() {
 
     if (confirmed) {
       try {
-        const response = await delet(`/dashboard/delete/${userID}`);
+        const response = await remove(`/dashboard/delete/${userID}`);
         const data = response.data;
 
         if (data.success) {
@@ -49,6 +49,7 @@ export default function User() {
     };
     getuser();
   }, [loadedata]);
+
   return (
     <div className="container ">
       <h1 className=" text-white mb-4">Users</h1>
@@ -57,16 +58,24 @@ export default function User() {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Image</th>
               <th scope="col">Name</th>
               <th scope="col">Email</th>
-              <th scope="col">Action</th>
+              <th scope="col">Remove</th>
             </tr>
           </thead>
           <tbody>
             {Users &&
               Users.map((user, index) => (
-                <tr key={user.id}>
+                <tr key={user._id}>
                   <th scope="row">{index + 1}</th>
+                  <td>
+                    <img
+                      src={`http://localhost:3000/images/${user.profile}`}
+                      alt="User profile"
+                      className="img-dashboard"
+                    />
+                  </td>
                   <td>{user.fullname}</td>
                   <td>{user.email}</td>
                   <td>

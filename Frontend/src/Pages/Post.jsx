@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { BaseUrl, get, post } from "../services/Endpoint";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { renderText } from "../../../Backend/controllers/Post";
 
 export default function Post() {
   const { postID } = useParams();
@@ -27,7 +28,7 @@ export default function Post() {
   const onSubmitComment = async (e) => {
     e.preventDefault();
     if (!user) {
-      toast.error("please Login");
+      toast.error("To be able to add a comment you need to Login");
     } else {
       try {
         const request = await post("/comment/addcomment", {
@@ -55,6 +56,11 @@ export default function Post() {
     }
   };
 
+  const renderDescriptionWithParagraphs = (description) => {
+    const lines = renderText(description);
+    return lines.map((line, index) => <div key={index}>{line}</div>);
+  };
+
   return (
     <div className="container text-white mt-5 mb-5">
       <div className="row">
@@ -72,7 +78,10 @@ export default function Post() {
             }}
           />
 
-          <p className="mb-5">{singlePost && singlePost.description}</p>
+          <div className="mb-5">
+            {singlePost &&
+              renderDescriptionWithParagraphs(singlePost.description)}
+          </div>
           <hr />
 
           <h3 className="mt-5 mb-4">Leave a Comment</h3>

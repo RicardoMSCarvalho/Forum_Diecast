@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { BaseUrl, patch } from "../services/Endpoint";
@@ -9,18 +10,23 @@ import { setUser } from "../redux/AuthSlice";
 export default function Profile() {
   const { userID } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
   const [fullname, setFullname] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+
+  // User state from Redux
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    if (user) {
+    if (!user) {
+      navigate("/");
+    } else {
       setFullname(user.fullname);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -39,6 +45,7 @@ export default function Profile() {
     if (profile) {
       formData.append("profile", profile);
     }
+
     try {
       const response = await patch(`auth/profile/${userID}`, formData);
       const data = response.data;
@@ -46,11 +53,16 @@ export default function Profile() {
         toast.success(data.message);
         dispatch(setUser(data.user));
       }
+      setFullname("");
+      setOldPassword("");
+      setNewPassword("");
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
   };
-
+  if (!user) {
+    return null;
+  }
   return (
     <div className="profile-container">
       <h1 className="profile-title">Update Profile</h1>

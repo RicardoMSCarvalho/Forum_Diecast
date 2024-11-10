@@ -23,42 +23,41 @@ export default function Admin() {
     };
     getData();
   }, []);
+
   return (
     <>
-      <div>
-        <h2 className="mb-4 text-white">Dashboard</h2>
-        <div className="row">
-          <div className="col-md-4">
-            <div
-              className="card text-white mb-4"
-              style={{ backgroundColor: "rgb(35, 157, 191)" }}
-            >
-              <div className="card-body">
-                <h5 className="card-title">Total Users</h5>
-                <p className="card-text">{users ? users.length : "0"}</p>
-              </div>
+      <h2 className="mb-4 text-white">Dashboard</h2>
+      <div className="row">
+        <div className="col-md-4">
+          <div
+            className="card text-white mb-4"
+            style={{ backgroundColor: "rgb(35, 157, 191)" }}
+          >
+            <div className="card-body">
+              <h5 className="card-title">Total Users</h5>
+              <p className="card-text">{users ? users.length : "0"}</p>
             </div>
           </div>
-          <div className="col-md-4">
-            <div
-              className="card text-white mb-4"
-              style={{ backgroundColor: "rgb(255, 184, 6)" }}
-            >
-              <div className="card-body">
-                <h5 className="card-title">Total Posts</h5>
-                <p className="card-text">{post ? post.length : "0"}</p>
-              </div>
+        </div>
+        <div className="col-md-4">
+          <div
+            className="card text-white mb-4"
+            style={{ backgroundColor: "rgb(255, 184, 6)" }}
+          >
+            <div className="card-body">
+              <h5 className="card-title">Total Posts</h5>
+              <p className="card-text">{post ? post.length : "0"}</p>
             </div>
           </div>
-          <div className="col-md-4">
-            <div
-              className="card text-white mb-4"
-              style={{ backgroundColor: "rgb(249, 134, 2)" }}
-            >
-              <div className="card-body">
-                <h5 className="card-title">Total Comments</h5>
-                <p className="card-text">{comments ? comments.length : "0"}</p>
-              </div>
+        </div>
+        <div className="col-md-4">
+          <div
+            className="card text-white mb-4"
+            style={{ backgroundColor: "rgb(249, 134, 2)" }}
+          >
+            <div className="card-body">
+              <h5 className="card-title">Total Comments</h5>
+              <p className="card-text">{comments ? comments.length : "0"}</p>
             </div>
           </div>
         </div>
