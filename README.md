@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Forum to share the latest released miniatures
 
 - There are 2 levels of access: Admin and User.
