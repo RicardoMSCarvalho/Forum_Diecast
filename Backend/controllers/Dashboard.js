@@ -45,6 +45,12 @@ const DeleteUser = async (req, resp) => {
     const userID = req.params.id;
 
     const ExistUser = await UserModal.findById(userID);
+    if (ExistUser.role == "admin") {
+      return resp.status(404).json({
+        success: false,
+        message: "Ups, You can't remove and Admin account",
+      });
+    }
     if (!ExistUser) {
       return resp
         .status(404)
@@ -68,13 +74,6 @@ const DeleteUser = async (req, resp) => {
     await CommentModel.deleteMany({
       _id: { $in: commentIDs },
     });
-
-    if (ExistUser.role == "admin") {
-      return resp.status(404).json({
-        success: false,
-        message: "Ups, You can't remove and Admin account",
-      });
-    }
 
     if (ExistUser.profile) {
       const deleted = await deleteImage(ExistUser.profile);
