@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Forum to share the latest released miniatures
 
 - There are 2 levels of access: Admin and User.
@@ -24,3 +25,6 @@
 
 
 ![Sign In Page](https://github.com/RicardoMSCarvalho/Diecast-Forum/blob/main/Register.PNG)
+=======
+# Forum_Diecast
+>>>>>>> 7f7c415723c31c6d0b007912570c8a3c2a1fa252
