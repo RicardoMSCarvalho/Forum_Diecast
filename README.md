@@ -3,7 +3,7 @@
 
 - There are 2 levels of access: Admin and User.
 
-- Users with Admin credentials can:
+- Users with Admin credentials can
   >Add and delete posts
   >Delete users (except other Admin)
   >Comment on posts
