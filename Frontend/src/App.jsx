@@ -10,9 +10,6 @@ import User from "./Pages/Admin/User";
 import AllPost from "./Pages/Admin/AllPost";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import { Provider } from "react-redux";
-import { persistor, store } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "react-hot-toast";
 import Profile from "./Pages/Profile";
 
@@ -22,8 +19,7 @@ export default function App() {
       <BrowserRouter>
         <Toaster position="bottom-right" />
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <Routes>
+              <Routes>
               <Route path="/" element={<UserLayout />}>
                 <Route index element={<Home />} />
                 <Route path="post/:postID" element={<Post />}></Route>
@@ -39,7 +35,7 @@ export default function App() {
               <Route path="/register" element={<Register />}></Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </PersistGate>
+       
         </Provider>
       </BrowserRouter>
     </>
