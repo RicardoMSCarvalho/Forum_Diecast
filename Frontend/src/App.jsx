@@ -18,8 +18,7 @@ export default function App() {
     <>
       <BrowserRouter>
         <Toaster position="bottom-right" />
-        <Provider store={store}>
-              <Routes>
+           <Routes>
               <Route path="/" element={<UserLayout />}>
                 <Route index element={<Home />} />
                 <Route path="post/:postID" element={<Post />}></Route>
@@ -35,8 +34,6 @@ export default function App() {
               <Route path="/register" element={<Register />}></Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-       
-        </Provider>
       </BrowserRouter>
     </>
   );
