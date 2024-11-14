@@ -21,8 +21,8 @@ export default function App() {
            <Routes>
               <Route path="/" element={<UserLayout />}>
                 <Route index element={<Home />} />
-                <Route path="post/:postID" element={<Post />}></Route>
-                <Route path="/profile/:userID" element={<Profile />}></Route>
+                <Route path="post/:postID" element={<Post />}/>
+                <Route path="/profile/:userID" element={<Profile />}/>
               </Route>
               <Route path="/dashboard" element={<Adminlayout />}>
                 <Route index element={<Admin />} />
@@ -30,8 +30,8 @@ export default function App() {
                 <Route path="users" element={<User />} />
                 <Route path="allposts" element={<AllPost />} />
               </Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/register" element={<Register />}></Route>
+              <Route path="/login" element={<Login />}/>
+              <Route path="/register" element={<Register />}/>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
       </BrowserRouter>
