@@ -22,7 +22,7 @@ export default function App() {
               <Route path="/" element={<UserLayout />}>
                 <Route index element={<Home />} />
                 <Route path="post/:postID" element={<Post />}/>
-                <Route path="/profile/:userID" element={<Profile />}/>
+                <Route path="profile/:userID" element={<Profile />}/>
               </Route>
               <Route path="/dashboard" element={<Adminlayout />}>
                 <Route index element={<Admin />} />
